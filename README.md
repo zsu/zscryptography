@@ -6,7 +6,7 @@ A simple encryption library using AES and PKCS7 padding.
 
 ```bash
 pip install pycryptography
-
+```
 ## Usage
 ```xml
 from cryptography import encrypt, decrypt
