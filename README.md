@@ -1,11 +1,11 @@
-# pycryptography
+# zscryptography
 
 A simple encryption library using AES and PKCS7 padding.
 
 ## Installation
 
 ```bash
-pip install pycryptography
+pip install zscryptography
 ```
 ## Usage
 ```xml
