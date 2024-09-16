@@ -9,7 +9,7 @@ pip install pycryptography
 ```
 ## Usage
 ```xml
-from cryptography import encrypt, decrypt
+from encryption import encrypt, decrypt
 
 # Define your key and plaintext
 key = "thisisaverysecretkey1234"
