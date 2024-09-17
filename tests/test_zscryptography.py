@@ -3,16 +3,13 @@ import sys
 import os
 
 # Add the parent directory to the system path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..\encryption')))
-
-from encryption import encrypt, decrypt  # Import from local encryption.py
-
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..\zscryptography')))
+from zscryptography import encrypt, decrypt  # Import from local zscryptography.py
 
 class TestEncryption(unittest.TestCase):
     def setUp(self):
-        self.key = "thisisaverysecretkey1234"
-        self.iv = "thisisasecretiv123"
+        self.key = 'thisisaverysecretkey123456789012'  
+        self.iv = 'thisisasecretiv1'
         self.plain_text = "Hello, World!"
 
     def test_encrypt_decrypt_with_iv(self):
