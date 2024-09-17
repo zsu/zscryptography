@@ -11,7 +11,7 @@ pip install zscryptography
 ```xml
 from zscryptography import encrypt, decrypt
 
-# Define your key and plaintext
+# Define your key(32 bytes) and plaintext
 key = "thisisaverysecretkey123456789012"
 plain_text = "Hello, World!"
 
