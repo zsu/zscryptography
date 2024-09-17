@@ -7,25 +7,28 @@ from cryptography.hazmat.primitives import padding
 def encrypt(plain_text, key, iv=None):
     if not key:
         raise ValueError("Key must be provided")
-    
+   
     if not iv:
-        iv = os.urandom(16)
-    
-    cipher = Cipher(algorithms.AES(key.encode('utf-8')), modes.CBC(iv), backend=default_backend())
+        ivbyte = os.urandom(16)
+    if isinstance(iv, str):
+        ivbyte = iv.encode('utf-8')
+    cipher = Cipher(algorithms.AES(key.encode('utf-8')), modes.CBC(ivbyte), backend=default_backend())
     encryptor = cipher.encryptor()
     
     padder = padding.PKCS7(algorithms.AES.block_size).padder()
     padded_data = padder.update(plain_text.encode('utf-8')) + padder.finalize()
     
     cipher_bytes = encryptor.update(padded_data) + encryptor.finalize()
-    
-    return b64encode(iv + cipher_bytes).decode('utf-8')
+    if not iv:
+        return b64encode(ivbyte + cipher_bytes).decode('utf-8')
+    else:
+        return b64encode(cipher_bytes).decode('utf-8')
 
 def decrypt(cipher_text, key, iv=None):
     if not key:
         raise ValueError("Key must be provided")
     
-    cipher_data = b64decode(cipher_text)
+    cipher_data = b64decode(cipher_text.encode('utf-8'))
     
     if not iv:
         iv = cipher_data[:16]

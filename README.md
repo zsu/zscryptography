@@ -1,6 +1,6 @@
 # zscryptography
 
-A simple encryption library using AES and PKCS7 padding.
+A simple encryption library using AES.
 
 ## Installation
 
@@ -9,10 +9,10 @@ pip install zscryptography
 ```
 ## Usage
 ```xml
-from encryption import encrypt, decrypt
+from zscryptography import encrypt, decrypt
 
 # Define your key and plaintext
-key = "thisisaverysecretkey1234"
+key = "thisisaverysecretkey123456789012"
 plain_text = "Hello, World!"
 
 # Encrypt the plaintext
