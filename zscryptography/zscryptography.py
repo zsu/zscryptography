@@ -1,47 +1,42 @@
 import os
 from base64 import b64encode, b64decode
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 
-def encrypt(plain_text, key, iv=None):
-    if not key:
-        raise ValueError("Key must be provided")
-   
-    if not iv:
-        ivbyte = os.urandom(16)
-    if isinstance(iv, str):
-        ivbyte = iv.encode('utf-8')
-    cipher = Cipher(algorithms.AES(key.encode('utf-8')), modes.CBC(ivbyte), backend=default_backend())
-    encryptor = cipher.encryptor()
-    
-    padder = padding.PKCS7(algorithms.AES.block_size).padder()
-    padded_data = padder.update(plain_text.encode('utf-8')) + padder.finalize()
-    
-    cipher_bytes = encryptor.update(padded_data) + encryptor.finalize()
-    if not iv:
-        return b64encode(ivbyte + cipher_bytes).decode('utf-8')
-    else:
-        return b64encode(cipher_bytes).decode('utf-8')
+class EncryptionService:
+    def __init__(self, key):
+        if len(key) not in [32]:
+            raise ValueError("Key must be 32 bytes long.")
+        self.key = key.encode('utf-8')
 
-def decrypt(cipher_text, key, iv=None):
-    if not key:
-        raise ValueError("Key must be provided")
-    
-    cipher_data = b64decode(cipher_text.encode('utf-8'))
-    
-    if not iv:
+    def encrypt(self, plain_text):
+        if not plain_text:
+            return plain_text
+
+        iv = os.urandom(16)
+        cipher = Cipher(algorithms.AES(self.key), modes.CBC(iv))
+        encryptor = cipher.encryptor()
+
+        padder = padding.PKCS7(algorithms.AES.block_size).padder()
+        padded_data = padder.update(plain_text.encode('utf-8')) + padder.finalize()
+
+        cipher_bytes = encryptor.update(padded_data) + encryptor.finalize()
+        return b64encode(iv + cipher_bytes).decode('utf-8')
+
+    def decrypt(self, cipher_text):
+        if not cipher_text:
+            return cipher_text
+
+        cipher_data = b64decode(cipher_text.encode('utf-8'))
         iv = cipher_data[:16]
-        cipher_data = cipher_data[16:]
-    else:
-        iv = iv.encode('utf-8')
-    
-    cipher = Cipher(algorithms.AES(key.encode('utf-8')), modes.CBC(iv), backend=default_backend())
-    decryptor = cipher.decryptor()
-    
-    plain_bytes = decryptor.update(cipher_data) + decryptor.finalize()
-    
-    unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
-    plain_bytes = unpadder.update(plain_bytes) + unpadder.finalize()
-    
-    return plain_bytes.decode('utf-8')
+        cipher_bytes = cipher_data[16:]
+
+        cipher = Cipher(algorithms.AES(self.key), modes.CBC(iv))
+        decryptor = cipher.decryptor()
+
+        plain_bytes = decryptor.update(cipher_bytes) + decryptor.finalize()
+
+        unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
+        plain_bytes = unpadder.update(plain_bytes) + unpadder.finalize()
+
+        return plain_bytes.decode('utf-8')

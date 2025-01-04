@@ -9,17 +9,18 @@ pip install zscryptography
 ```
 ## Usage
 ```xml
-from zscryptography import encrypt, decrypt
+from zscryptography import *
 
-# Define your key(32 bytes) and plaintext
+# Initialize the encryption service with a secure key(32 bytes)
 key = "thisisaverysecretkey123456789012"
-plain_text = "Hello, World!"
+encryptor = EncryptionService(key)
 
 # Encrypt the plaintext
-encrypted_text = encrypt(plain_text, key)
+plain_text = "Hello, World!"
+encrypted_text = encryptor.encrypt(plain_text)
 print(f"Encrypted: {encrypted_text}")
 
 # Decrypt the ciphertext
-decrypted_text = decrypt(encrypted_text, key)
+decrypted_text = encryptor.decrypt(encrypted_text)
 print(f"Decrypted: {decrypted_text}")
 ```

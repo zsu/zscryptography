@@ -1,1 +1,1 @@
-from .zscryptography import encrypt, decrypt
+from .zscryptography import *
